@@ -19,11 +19,13 @@ import {
   FileText
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { predictApi } from '../api/predictApi';
 
 const Predict = () => {
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [modelType, setModelType] = useState('federated');
   
   // Form State
   const [formData, setFormData] = useState({
@@ -51,26 +53,53 @@ const Predict = () => {
     setLoading(true);
     setPrediction(null);
     
-    // Simulate complex calculation
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const riskScore = Math.random() * 100;
-      const result = {
-        probability: riskScore,
-        riskLevel: riskScore < 30 ? 'Low' : riskScore < 70 ? 'Moderate' : 'High',
-        factors: [
-          { name: 'Cholesterol', impact: 'High', value: formData.chol },
-          { name: 'Max Heart Rate', impact: 'Medium', value: formData.thalach },
-          { name: 'ST Depression', impact: 'Low', value: formData.oldpeak }
-        ],
-        timestamp: new Date().toISOString()
+      // Map form data to feature array expected by backend
+      const features = [
+        formData.age,
+        formData.sex,
+        formData.cp,
+        formData.trestbps,
+        formData.chol,
+        formData.fbs,
+        formData.restecg,
+        formData.thalach,
+        formData.exang,
+        formData.oldpeak,
+        formData.slope,
+        formData.ca,
+        formData.thal
+      ];
+
+      const payload = {
+        patient_id: 'user_' + Date.now(),
+        features: features,
+        model_type: modelType
       };
+
+      const response = await predictApi.makePrediction(payload);
       
-      setPrediction(result);
-      toast.success('Analysis Complete');
+      if (response.data.status === 'success') {
+        const result = response.data.data;
+        setPrediction({
+          probability: result.probability * 100, // Convert to percentage
+          riskLevel: result.risk_level,
+          factors: [
+            { name: 'Cholesterol', impact: 'High', value: formData.chol },
+            { name: 'Max Heart Rate', impact: 'Medium', value: formData.thalach },
+            { name: 'ST Depression', impact: 'Low', value: formData.oldpeak }
+          ],
+          timestamp: result.timestamp,
+          modelUsed: result.model_used,
+          driftDetected: result.drift_detected
+        });
+        toast.success('Analysis Complete');
+      } else {
+        throw new Error(response.data.message || 'Prediction failed');
+      }
     } catch (err) {
-      toast.error('Analysis Failed');
+      console.error(err);
+      toast.error(err.message || 'Analysis Failed');
     } finally {
       setLoading(false);
     }
@@ -105,6 +134,12 @@ const Predict = () => {
           {label: 'ST-T Wave Abnormality', value: 1},
           {label: 'LV Hypertrophy', value: 2}
         ]},
+        { key: 'ca', label: 'Major Vessels (0-3)', type: 'slider', min: 0, max: 3, step: 1, unit: '' },
+        { key: 'thal', label: 'Thalassemia', type: 'select', options: [
+          {label: 'Normal', value: 1},
+          {label: 'Fixed Defect', value: 2},
+          {label: 'Reversible Defect', value: 3}
+        ]},
       ]
     },
     {
@@ -115,6 +150,11 @@ const Predict = () => {
         { key: 'thalach', label: 'Max Heart Rate', type: 'slider', min: 60, max: 220, unit: 'bpm' },
         { key: 'exang', label: 'Exercise Induced Angina', type: 'select', options: [{label: 'Yes', value: 1}, {label: 'No', value: 0}] },
         { key: 'oldpeak', label: 'ST Depression', type: 'slider', min: 0, max: 6, step: 0.1, unit: '' },
+        { key: 'slope', label: 'ST Slope', type: 'select', options: [
+          {label: 'Upsloping', value: 1},
+          {label: 'Flat', value: 2},
+          {label: 'Downsloping', value: 3}
+        ]},
       ]
     }
   ];
@@ -133,9 +173,38 @@ const Predict = () => {
               Federated AI Model v2.4 • Secure Environment
             </p>
           </div>
-          <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-            <Shield className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-gray-300">End-to-End Encrypted</span>
+          <div className="flex items-center space-x-4">
+             <div className="relative">
+              <select
+                value={modelType}
+                onChange={(e) => setModelType(e.target.value)}
+                className="appearance-none bg-gray-900 border border-white/10 text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-8"
+              >
+                <option value="federated">Federated (Default)</option>
+                <optgroup label="Athletic Activities">
+                  <option value="athletic">General Athlete</option>
+                  <option value="runner">Runner</option>
+                  <option value="cyclist">Cyclist</option>
+                  <option value="weightlifter">Weightlifter</option>
+                  <option value="exercise">Fitness Enthusiast</option>
+                </optgroup>
+                <optgroup label="Water Sports">
+                  <option value="diver">Diver</option>
+                  <option value="swimmer">Swimmer</option>
+                </optgroup>
+                <optgroup label="Lifestyle">
+                  <option value="typical">Typical / Sedentary</option>
+                </optgroup>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                <Brain className="h-4 w-4" />
+              </div>
+            </div>
+
+            <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+              <Shield className="w-4 h-4 text-green-400" />
+              <span className="text-xs text-gray-300">End-to-End Encrypted</span>
+            </div>
           </div>
         </div>
 

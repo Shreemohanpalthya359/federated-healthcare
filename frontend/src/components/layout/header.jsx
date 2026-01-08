@@ -29,7 +29,6 @@ const Header = () => {
 
   const navItems = user ? [
     { path: '/predict', label: 'Predict', icon: Brain },
-    { path: '/models', label: 'Models', icon: Shield },
     { path: '/monitor', label: 'Monitor', icon: Heart },
   ] : [
     { path: '/', label: 'Dashboard', icon: Activity },

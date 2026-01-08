@@ -21,7 +21,12 @@ os.makedirs(FEDERATED_MODEL_DIR, exist_ok=True)
 # Utility: Train & Save Model
 # ----------------------------------
 def train_and_save_model(data, model_path):
-    X = data.drop(columns=["target", "user_type"])
+    # Drop user_type only if it exists
+    drop_cols = ["target"]
+    if "user_type" in data.columns:
+        drop_cols.append("user_type")
+        
+    X = data.drop(columns=drop_cols)
     y = data["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(

@@ -18,19 +18,44 @@ logger = get_logger(__name__)
 class PredictionService:
     """Service for making heart disease predictions"""
     
-    def __init__(self, model_dir: str = 'models/'):
-        self.model_dir = model_dir
-        self.scaler = DataScaler()
+    def __init__(self, model_dir: str = None):
+        if model_dir is None:
+            # Resolve models directory relative to this file
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.model_dir = os.path.join(base_dir, 'models')
+        else:
+            self.model_dir = model_dir
+
+        # Try to load learned scaler, fallback to default
+        scaler_path = os.path.join(self.model_dir, 'scaler.pkl')
+        try:
+            if os.path.exists(scaler_path):
+                self.scaler = joblib.load(scaler_path)
+                logger.info(f"Loaded Standard Scaler from {scaler_path}")
+            else:
+                logger.warning(f"Scaler not found at {scaler_path}, using default DataScaler")
+                self.scaler = DataScaler()
+        except Exception as e:
+            logger.error(f"Failed to load scaler: {e}, using default DataScaler")
+            self.scaler = DataScaler()
+
         self.drift_detector = DriftDetector()
         
         # Load models
         self.models = {
-            'centralized': self._load_model('centralized/heart_disease_model.pkl'),
-            'federated': self._load_model('federated/heart_disease_federated.pkl'),
-            'athletic': self._load_model('specialized/athletic_model.pkl'),
-            'diver': self._load_model('specialized/diver_model.pkl'),
-            'typical': self._load_model('specialized/typical_model.pkl')
+            'centralized': self._load_model('centralized/baseline.pkl'),
+            'federated': self._load_model('centralized/baseline.pkl'), # Fallback to centralized for now or generic federated
+            'athletic': self._load_model('federated/athletic.pkl'),
+            'diver': self._load_model('federated/diver.pkl'),
+            'typical': self._load_model('federated/typical.pkl')
         }
+        
+        # Add aliases for more specific user-friendly types
+        self.models['swimmer'] = self.models.get('diver')
+        self.models['runner'] = self.models.get('athletic')
+        self.models['exercise'] = self.models.get('athletic')
+        self.models['cyclist'] = self.models.get('athletic')
+        self.models['weightlifter'] = self.models.get('athletic')
         
         # Load feature names
         self.feature_names = self._load_feature_names()
@@ -51,8 +76,8 @@ class PredictionService:
         full_path = os.path.join(self.model_dir, model_path)
         try:
             if os.path.exists(full_path):
-                with open(full_path, 'rb') as f:
-                    model = pickle.load(f)
+                # Use joblib to load models saved by train.py
+                model = joblib.load(full_path)
                 logger.info(f"Loaded model from {full_path}")
                 return model
             else:
@@ -105,7 +130,12 @@ class PredictionService:
                 )
             
             # Scale features
-            scaled_features = self.scaler.transform(features)
+            if isinstance(self.scaler, DataScaler):
+                scaled_features = self.scaler.transform(features)
+            else:
+                # Scikit-learn scaler expects 2D array
+                features_array = np.array(features).reshape(1, -1)
+                scaled_features = self.scaler.transform(features_array)[0]
             
             # Select model
             model = self.models.get(model_type, self.models['federated'])
@@ -198,7 +228,7 @@ class PredictionService:
     def models_loaded(self) -> bool:
         """Check if all models are loaded"""
         return all(model is not None for model in self.models.values())
-    
+
     def is_ready(self) -> bool:
         """Check if service is ready to serve requests"""
         return len(self.models) > 0 and self.models_loaded()

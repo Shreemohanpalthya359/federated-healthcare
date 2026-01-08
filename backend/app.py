@@ -42,6 +42,14 @@ except ImportError as e:
     MONITOR_AVAILABLE = False
     logger.warning(f"Monitor routes not found: {e}")
 
+# Import and register prediction routes
+try:
+    from routes.predict import predict_bp
+    app.register_blueprint(predict_bp, url_prefix='/api/v1')
+    logger.info("✓ Prediction routes loaded successfully")
+except ImportError as e:
+    logger.warning(f"Prediction routes not found: {e}")
+
 # Generate realistic vital signs for a specific person
 def generate_vital_signs(person_id="person_001"):
     """Generate realistic vital signs for tracking"""

@@ -39,17 +39,13 @@ ChartJS.register(
 const LiveMonitor = () => {
   const [monitoringActive, setMonitoringActive] = useState(false);
   const [connected, setConnected] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState('patient_001');
+  const [selectedPatient] = useState('current_user'); // Fixed to single user
   const [vitalData, setVitalData] = useState(null);
   const [ecgData, setEcgData] = useState(Array(50).fill(0));
   const socketRef = useRef(null);
 
-  // Simulated patients list
-  const patients = [
-    { id: 'patient_001', name: 'John Doe', status: 'Critical' },
-    { id: 'patient_002', name: 'Jane Smith', status: 'Stable' },
-    { id: 'patient_003', name: 'Robert Johnson', status: 'Stable' },
-  ];
+  // Single patient
+  const patient = { id: 'current_user', name: 'Current User', status: 'Active' };
 
   useEffect(() => {
     // Simulate WebSocket for demo purposes if backend isn't running
@@ -142,15 +138,10 @@ const LiveMonitor = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <select 
-              value={selectedPatient}
-              onChange={(e) => setSelectedPatient(e.target.value)}
-              className="bg-gray-900 border border-white/10 text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5"
-            >
-              {patients.map(p => (
-                <option key={p.id} value={p.id}>{p.name} ({p.status})</option>
-              ))}
-            </select>
+            <div className="flex items-center space-x-2 px-3 py-2 bg-gray-900 rounded-lg border border-white/10">
+              <User className="w-4 h-4 text-gray-400" />
+              <span className="text-sm font-medium text-white">{patient.name}</span>
+            </div>
             <div className="flex items-center space-x-2 px-3 py-2 bg-gray-900 rounded-lg border border-white/10">
               <Clock className="w-4 h-4 text-gray-400" />
               <span className="text-sm font-mono">{new Date().toLocaleTimeString()}</span>

@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Layout/Header';
 import Landing from './pages/Landing';
 import Predict from './pages/Predict';
-import Model from './pages/model';
 import LiveMonitor from './components/LiveMonitor';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -28,11 +27,6 @@ function App() {
           <Route path="/predict" element={
             <ProtectedRoute>
               <Predict />
-            </ProtectedRoute>
-          } />
-          <Route path="/model" element={
-            <ProtectedRoute>
-              <Model />
             </ProtectedRoute>
           } />
           <Route path="/monitor" element={
