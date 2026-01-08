@@ -8,20 +8,20 @@ monitor_bp = Blueprint('monitor', __name__)
 
 @monitor_bp.route('/api/monitor/status')
 def get_status():
-    """Check monitoring status"""
+    """Check tracking status"""
     return jsonify({
         "active": True,
-        "message": "Monitoring system ready",
+        "message": "Live tracking system ready",
         "live_websocket": "available",
         "timestamp": datetime.now().isoformat()
     })
 
-@monitor_bp.route('/api/monitor/patients')
-def get_patients():
-    """Get list of patients being monitored"""
-    patients = [
+@monitor_bp.route('/api/monitor/people')
+def get_people():
+    """Get list of people available for tracking"""
+    people = [
         {
-            "id": "patient_001",
+            "id": "person_001",
             "name": "John Doe",
             "age": 58,
             "condition": "Hypertension",
@@ -31,7 +31,7 @@ def get_patients():
             "last_update": datetime.now().isoformat()
         },
         {
-            "id": "patient_002",
+            "id": "person_002",
             "name": "Jane Smith",
             "age": 65,
             "condition": "Coronary Artery Disease",
@@ -41,7 +41,7 @@ def get_patients():
             "last_update": datetime.now().isoformat()
         },
         {
-            "id": "patient_003",
+            "id": "person_003",
             "name": "Robert Johnson",
             "age": 72,
             "condition": "Heart Failure",
@@ -51,7 +51,13 @@ def get_patients():
             "last_update": datetime.now().isoformat()
         }
     ]
-    return jsonify(patients)
+    return jsonify(people)
+
+# Keep the old endpoint for backward compatibility
+@monitor_bp.route('/api/monitor/patients')
+def get_patients():
+    """Backward compatibility endpoint"""
+    return get_people()
 
 @monitor_bp.route('/api/monitor/alerts')
 def get_alerts():
@@ -59,7 +65,7 @@ def get_alerts():
     alerts = [
         {
             "id": 1,
-            "patient_id": "patient_001",
+            "person_id": "person_001",
             "type": "heart_rate",
             "message": "Heart rate above threshold: 118 bpm",
             "severity": "high",
@@ -68,7 +74,7 @@ def get_alerts():
         },
         {
             "id": 2,
-            "patient_id": "patient_003",
+            "person_id": "person_003",
             "type": "blood_pressure",
             "message": "Systolic BP elevated: 142 mmHg",
             "severity": "medium",
@@ -85,16 +91,18 @@ def live_demo():
         "heart_rate": random.randint(60, 120),
         "blood_pressure": f"{random.randint(110, 140)}/{random.randint(70, 90)}",
         "oxygen_saturation": random.randint(95, 100),
+        "respiratory_rate": random.randint(12, 20),
+        "temperature": round(random.uniform(36.5, 37.5), 1),
         "timestamp": datetime.now().isoformat()
     })
 
 @monitor_bp.route('/api/monitor/test')
 def test_endpoint():
-    """Test endpoint to verify monitor API is working"""
+    """Test endpoint to verify API is working"""
     return jsonify({
         "status": "success",
-        "message": "Monitor API is working correctly",
-        "live_monitoring": "available",
+        "message": "Live tracking API is working correctly",
+        "live_tracking": "available",
         "websocket": "enabled",
         "timestamp": datetime.now().isoformat()
     })
