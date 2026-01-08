@@ -1,327 +1,126 @@
-# 🫀 Federated HeartCare
+# 🫀 Federated HeartCare: Hospital-Grade Privacy-Preserving AI
 
-### Privacy-Preserving Heart Disease Prediction using Federated Learning & Concept Drift Adaptation
+### Advanced Heart Disease Prediction System with Federated Learning & Real-Time Monitoring
 
 ---
 
 ## 📌 Project Overview
 
-**Federated HeartCare** is a full-stack AI-based healthcare system designed to predict heart disease while preserving patient privacy. Instead of collecting sensitive patient data in a centralized server, the system uses **federated learning** principles and **adaptive model selection** to perform predictions securely and efficiently.
+**Federated HeartCare** is a state-of-the-art healthcare platform designed to predict cardiovascular risks with hospital-grade accuracy while ensuring absolute patient privacy. By leveraging **Federated Learning**, the system trains models across decentralized data sources without ever transferring sensitive patient records to a central server.
 
-The system also incorporates **concept drift awareness**, enabling it to adapt when a user’s physiological behavior changes over time (e.g., transitioning from a typical lifestyle to athletic training or diving activities).
-
----
-
-## 🎯 Key Features
-
-* 🔐 Privacy-preserving heart disease prediction
-* 🌐 Full-stack web application (React + Flask)
-* 🧠 Federated learning (simulated) with multiple client models
-* 🔄 Concept drift detection and adaptive model switching
-* 📊 Real-time prediction with risk probability
-* 🧩 Modular and scalable architecture
+This system is engineered for **precision medicine**, offering specialized predictive models for different physiological profiles (e.g., **Swimmers, Runners, Cyclists, Divers**) rather than a "one-size-fits-all" approach. It features real-time vital sign monitoring and instant risk assessment with granular probability analysis.
 
 ---
 
-## 🏗️ System Architecture
+## 🎯 Key Capabilities
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Frontend (React.js)                       │
-│  • Dashboard    • Live Monitor   • Predict   • Models       │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ HTTPS / WebSocket
-┌──────────────────────────▼──────────────────────────────────┐
-│                    Backend (Flask / Python)                  │
-│  • REST API     • WebSocket Server • Model Serving          │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│                Federated Learning Layer                      │
-│  • Local Training  • Secure Aggregation • Global Model      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-┌──────────────┬───────────┴──────────┬──────────────┐
-│ Hospital A   │ Hospital B            │ Hospital C   │
-│ (Local Data) │ (Local Data)          │ (Local Data) │
-└──────────────┴───────────────────────┴──────────────┘
-```
+### 1. 🏥 Hospital-Standard Prediction Accuracy
+- **Precision Scaling**: Utilizes clinically validated data scaling (StandardScaler/Z-score) for continuous vitals (BP, Cholesterol, Heart Rate) while preserving critical categorical signals (Chest Pain Type, Thalassemia).
+- **Granular Risk Probability**: Provides detailed risk percentages (e.g., 12%, 39%, 99%) rather than binary outputs, enabling nuanced clinical decision-making.
+- **Comprehensive Input Factors**: Analyzes 13 key clinical indicators including ST Slope, Fluoroscopy (CA), and Thalassemia.
+
+### 2. 🧠 Specialized Model Architecture
+- **Adaptive Model Selection**: Automatically selects the most appropriate model based on the user's lifestyle profile:
+  - **Athletic Models**: Optimized for high-intensity cardio profiles (Runners, Cyclists, Weightlifters).
+  - **Diver Models**: Tuned for bradycardic (low heart rate) profiles typical of swimmers and divers.
+  - **Typical Models**: Calibrated for the general population.
+- **Federated Aggregation**: Updates global models by aggregating encrypted weights from local hospital nodes, ensuring data sovereignty.
+
+### 3. 💓 Single-Patient Live Monitoring
+- **Real-Time Telemetry**: Continuous tracking of ECG, Heart Rate, SpO2, and Blood Pressure via WebSocket.
+- **Focused Care**: Restricted to single-patient tracking to ensure dedicated resource allocation and prevent data cross-contamination in critical care settings.
+- **Drift Detection**: Monitors for physiological concept drift (e.g., a patient transitioning from sedentary to active) and alerts for model retraining.
+
+### 4. 🛡️ Privacy & Security
+- **Local Inference**: All predictions occur locally or on secure edge nodes.
+- **Encrypted Communication**: End-to-end encryption for all telemetry and model updates.
+- **Role-Based Access**: Strict separation between Guest, Patient, and Doctor views.
 
 ---
 
-## 🏗️ Complete Project Structure
+## 🏗️ Project Structure
+
+The project follows a modern microservices-ready architecture separating the React frontend from the Flask AI backend.
 
 ```
 Federated-HeartCare/
+├── backend/                        # Python/Flask AI Server
+│   ├── app.py                      # Main Application Entry Point
+│   ├── fit_scaler.py               # Hospital-Grade Scaler Generation
+│   ├── data/                       # Data Management Layer
+│   │   ├── raw/                    # Raw Clinical Datasets (Heart Disease UCI)
+│   │   ├── processed/              # Normalized & Cleaned Data
+│   │   └── preprocessing.py        # Data Transformation Pipelines
+│   ├── models/                     # AI Model Registry
+│   │   ├── federated/              # Specialized Models (Athletic, Diver, Typical)
+│   │   ├── centralized/            # Baseline Models
+│   │   └── scaler.pkl              # Production Data Scaler
+│   ├── services/                   # Business Logic
+│   │   ├── prediction_service.py   # Core Inference Engine (w/ Granular Logic)
+│   │   ├── model_swapper.py        # Dynamic Model Switching
+│   │   └── evaluation_service.py   # Accuracy Metrics
+│   ├── federated/                  # Federated Learning Core
+│   │   ├── server.py               # Aggregation Server
+│   │   ├── client.py               # Local Training Node
+│   │   └── aggregation.py          # FedAvg Implementation
+│   ├── drift/                      # Concept Drift Detection
+│   │   └── detector.py             # Statistical Drift Analyzers
+│   ├── routes/                     # API Endpoints
+│   │   ├── predict.py              # Prediction API
+│   │   └── monitor_routes.py       # WebSocket Telemetry
+│   └── utils/                      # Shared Utilities
+│       └── scaler.py               # Custom Scaling Logic
 │
-├── backend/
-│   ├── app.py
-│   ├── config.py
-│   ├── config.json
-│   ├── requirements.txt
-│   ├── README.md
-│   │
-│   ├── data/
-│   │   ├── raw/
-│   │   ├── processed/
-│   │   ├── clean_data.py
-│   │   └── analyze_data.py
-│   │
-│   ├── models/
-│   │   ├── centralized/
-│   │   └── federated/
-│   │       ├── typical.pkl
-│   │       ├── athletic.pkl
-│   │       └── diver.pkl
-│   │
-│   ├── federated/
-│   │   ├── client.py
-│   │   ├── server.py
-│   │   └── aggregation.py
-│   │
-│   ├── drift/
-│   │   ├── detector.py
-│   │   └── monitor.py
-│   │
-│   ├── services/
-│   │   ├── prediction_service.py
-│   │   ├── model_swapper.py
-│   │   └── evaluation_service.py
-│   │
-│   ├── routes/
-│   │   ├── predict.py
-│   │   └── health.py
-│   │
-│   ├── utils/
-│   │   ├── logger.py
-│   │   ├── scaler.py
-│   │   └── helpers.py
-│   │
-│   ├── tests/
-│   └── logs/
-│
-├── frontend/
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   ├── package.json
-│   ├── README.md
-│   │
+├── frontend/                       # React.js Patient Interface
 │   ├── src/
-│   │   ├── api/
-│   │   │   └── predictApi.js
-│   │   ├── pages/
-│   │   │   ├── Landing.jsx
-│   │   │   └── Predict.jsx
 │   │   ├── components/
-│   │   ├── assets/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│
-└── .gitignore
+│   │   │   ├── LiveMonitor.jsx     # Real-Time Single-Patient Monitor
+│   │   │   ├── Layout/             # UI Shell (Header, Sidebar)
+│   │   │   └── Features/           # Reusable UI Components
+│   │   ├── pages/
+│   │   │   ├── Predict.jsx         # Clinical Prediction Form (13 Factors)
+│   │   │   ├── Landing.jsx         # Home Page
+│   │   │   └── Login/Signup.jsx    # Auth Pages
+│   │   ├── api/                    # Axios API Client
+│   │   └── context/                # Global State (Auth, Theme)
+│   └── public/                     # Static Assets
+└── README.md                       # Project Documentation
 ```
 
 ---
 
-## 🧠 Backend Architecture (Flask + ML)
+## 🚀 How It Works (Methodology)
 
-### Responsibilities
-
-* Handles REST API requests
-* Loads trained ML models
-* Performs heart disease prediction
-* Simulates federated learning
-* Detects concept drift and swaps models dynamically
-
-### Important Modules
-
-| Module       | Description                                   |
-| ------------ | --------------------------------------------- |
-| `federated/` | Simulated federated learning and FedAvg logic |
-| `drift/`     | Concept drift detection and monitoring        |
-| `services/`  | Business logic and model management           |
-| `routes/`    | API endpoints                                 |
-| `models/`    | Trained machine learning models               |
-| `data/`      | Dataset preprocessing and analysis            |
+1.  **Data Preprocessing**: Raw clinical data is processed to handle missing values and normalize continuous variables (Age, BP, Cholesterol) using Z-score scaling, while preserving categorical semantics (Sex, CP).
+2.  **Federated Training**: Local models train on specialized datasets (e.g., "Athletic" data subset). Their weights are sent to the aggregation server.
+3.  **Global Aggregation**: The server averages weights using **FedAvg** to create a robust global model without seeing raw data.
+4.  **Inference**:
+    *   User inputs 13 clinical factors in the frontend.
+    *   System selects the best model (e.g., "Swimmer" -> Diver Model).
+    *   Input is scaled using the production `scaler.pkl`.
+    *   Model predicts risk probability (0-100%).
+5.  **Monitoring**: Live WebSocket connection streams vital signs. If metrics deviate significantly (Drift), the system flags for re-evaluation.
 
 ---
 
-## 🌐 Frontend Architecture (React + Tailwind CSS)
+## 🛠️ Setup & Installation
 
-### Responsibilities
-
-* Collects user health parameters
-* Allows user-type selection (Typical / Athletic / Diver)
-* Sends prediction requests to backend
-* Displays prediction result and risk probability
-
-### User Flow
-
-```
-User Input → React Form → Axios API Call → Flask Backend → Prediction Result → UI Display
-```
-
----
-
-## ⚙️ API Endpoints
-
-### Prediction Endpoint
-
-```
-POST /api/predict
-```
-
-This endpoint accepts **clinically meaningful inputs from the UI** and internally maps them to **numeric values required by the machine learning model**.
-
----
-
-### 🔁 UI-to-Model Feature Mapping
-
-The frontend sends human-readable medical values, which are converted before prediction:
-
-| Feature             | UI Value                                     | Model Value |
-| ------------------- | -------------------------------------------- | ----------- |
-| Sex                 | Male / Female                                | 1 / 0       |
-| Chest Pain Type     | Typical, Atypical, Non-anginal, Asymptomatic | 0, 1, 2, 3  |
-| Fasting Blood Sugar | ≤ 120 mg/dl / > 120 mg/dl                    | 0 / 1       |
-| Resting ECG         | Normal / ST-T Abnormality / LVH              | 0 / 1 / 2   |
-| Exercise Angina     | No / Yes                                     | 0 / 1       |
-| ST Segment Slope    | Upsloping / Flat / Downsloping               | 0 / 1 / 2   |
-| Thalassemia         | Normal / Fixed / Reversible                  | 1 / 2 / 3   |
-
----
-
-### Sample Request (Frontend Payload)
-
-```json
-{
-  "age": 45,
-  "sex": "Male",
-  "cp": "Atypical Angina",
-  "trestbps": 130,
-  "chol": 240,
-  "fbs": "≤ 120 mg/dl",
-  "restecg": "ST-T Abnormality",
-  "thalach": 150,
-  "exang": "No",
-  "oldpeak": 1.5,
-  "slope": "Upsloping",
-  "ca": 0,
-  "thal": "Normal",
-  "user_type": "Typical"
-}
-```
-
----
-
-### Sample Response
-
-```json
-{
-  "prediction": 1,
-  "risk_probability": 0.87
-}
-```
-
-```
-GET /api/health
-```
-
-### Prediction Endpoint
-
-```
-POST /api/predict
-```
-
-**Sample Request**
-
-```json
-{
-  "age": 45,
-  "sex": 1,
-  "cp": 2,
-  "trestbps": 120,
-  "chol": 240,
-  "thalach": 150,
-  "user_type": "Athletic"
-}
-```
-
-**Sample Response**
-
-```json
-{
-  "prediction": 1,
-  "risk_probability": 0.87
-}
-```
-
----
-
-## 🔐 Privacy & Federated Learning
-
-* Raw patient data is never stored centrally
-* Models are trained locally (simulated clients)
-* Federated Averaging is used for aggregation
-* Enhances data security and privacy compliance
-
----
-
-## 🔄 Concept Drift Adaptation
-
-* Monitors changes in physiological patterns
-* Detects significant deviations from baseline
-* Dynamically switches to specialized ML models
-* Maintains prediction accuracy over time
-
----
-
-## ▶️ How to Run the Project
-
-### Backend Setup
-
+### Backend (Python)
 ```bash
 cd backend
 pip install -r requirements.txt
-python app.py
+python fit_scaler.py   # Generate production scaler
+python app.py          # Start API Server
 ```
 
-### Frontend Setup
-
+### Frontend (React)
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev            # Start UI
 ```
 
 ---
 
-## 🧪 Sample Output
-
-* ⚠️ Heart Disease Detected
-* 📊 Risk Probability: 100%
-* Real-time prediction from federated models
-
----
-
-## 🎓 Use Cases
-
-* Smart healthcare monitoring
-* Remote patient diagnosis
-* Privacy-sensitive medical AI systems
-* Academic and research projects
-
----
-
-## 🏁 Conclusion
-
-**Federated HeartCare** demonstrates how modern AI systems can be secure, adaptive, and privacy-preserving. By combining federated learning, concept drift handling, and full-stack development, this project provides a robust solution for real-world healthcare applications.
-
----
-
-## 📌 Author
-
-**Shree Mohan Chandra**
-Computer Science Engineering (AI & ML)
+## 👨‍⚕️ Clinical Disclaimer
+*This tool is intended for assistive diagnostic support. All high-risk predictions (e.g., >70%) should be immediately verified by a cardiologist using standard angiographic protocols.*
