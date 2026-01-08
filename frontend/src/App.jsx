@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Layout/Header';
 import Landing from './pages/Landing';
 import Predict from './pages/Predict';
-import Models from './pages/Models';
+import Model from './pages/Model';
+import LiveMonitor from './components/LiveMonitor';  // Add this import
 
 function App() {
   return (
@@ -13,13 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/predict" element={<Predict />} />
-          <Route path="/models" element={<Models />} />
-          <Route path="/monitor" element={
-            <div className="container mx-auto px-4 py-8 text-center">
-              <h1 className="text-4xl font-bold gradient-text mb-4">Live Monitor</h1>
-              <p className="text-gray-400">Coming soon...</p>
-            </div>
-          } />
+          <Route path="/model" element={<Model />} />
+          <Route path="/monitor" element={<LiveMonitor />} />  {/* Updated route */}
         </Routes>
       </main>
     </div>

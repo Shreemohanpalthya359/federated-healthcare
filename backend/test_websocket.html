@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Monitor Test</title>
+</head>
+<body>
+    <h1>Federated HeartCare Live Monitor Test</h1>
+    
+    <div>
+        <button onclick="connectWebSocket()">Connect</button>
+        <button onclick="startMonitoring()">Start Monitoring</button>
+        <button onclick="stopMonitoring()">Stop Monitoring</button>
+        <button onclick="disconnectWebSocket()">Disconnect</button>
+    </div>
+    
+    <div id="status">Status: Disconnected</div>
+    <div id="data"></div>
+    
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        let socket = null;
+        
+        function connectWebSocket() {
+            socket = io('http://localhost:5001');
+            
+            socket.on('connect', () => {
+                document.getElementById('status').innerHTML = 'Status: Connected';
+                console.log('Connected to WebSocket');
+            });
+            
+            socket.on('connected', (data) => {
+                console.log('Server welcome:', data);
+            });
+            
+            socket.on('live_vitals', (data) => {
+                document.getElementById('data').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                console.log('Live vitals:', data);
+            });
+            
+            socket.on('monitoring_status', (data) => {
+                console.log('Monitoring status:', data);
+            });
+            
+            socket.on('disconnect', () => {
+                document.getElementById('status').innerHTML = 'Status: Disconnected';
+                console.log('Disconnected');
+            });
+        }
+        
+        function startMonitoring() {
+            if (socket) {
+                socket.emit('start_monitoring');
+            }
+        }
+        
+        function stopMonitoring() {
+            if (socket) {
+                socket.emit('stop_monitoring');
+            }
+        }
+        
+        function disconnectWebSocket() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+            }
+        }
+    </script>
+</body>
+</html>
