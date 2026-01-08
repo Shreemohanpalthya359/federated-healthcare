@@ -109,8 +109,10 @@ Federated-HeartCare/
 ```bash
 cd backend
 pip install -r requirements.txt
-python fit_scaler.py   # Generate production scaler
-python app.py          # Start API Server
+python fit_scaler.py               # Generate production scaler
+python models/train.py --mode centralized # Generate baseline models
+python models/train.py --mode federated   # Generate federated models
+python app.py                      # Start API Server
 ```
 
 ### Frontend (React)
