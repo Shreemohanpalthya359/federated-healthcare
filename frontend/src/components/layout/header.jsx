@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Heart, 
   Shield, 
@@ -9,18 +9,32 @@ import {
   X,
   Settings,
   User,
-  Bell
+  Bell,
+  LogOut,
+  LogIn
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  const navItems = [
-    { path: '/', label: 'Dashboard', icon: Activity },
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsMenuOpen(false);
+  };
+
+  const navItems = user ? [
     { path: '/predict', label: 'Predict', icon: Brain },
     { path: '/models', label: 'Models', icon: Shield },
     { path: '/monitor', label: 'Monitor', icon: Heart },
+  ] : [
+    { path: '/', label: 'Dashboard', icon: Activity },
+    { path: '/login', label: 'Login', icon: LogIn },
+    { path: '/signup', label: 'Sign Up', icon: User },
   ];
 
   return (
@@ -65,16 +79,34 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-3">
-            <button className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-all">
-              <Bell className="w-5 h-5" />
-            </button>
-            <button className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-all">
-              <Settings className="w-5 h-5" />
-            </button>
-            <button className="flex items-center space-x-2 px-3 py-2 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all">
-              <User className="w-4 h-4" />
-              <span className="text-sm font-medium">Dr. Smith</span>
-            </button>
+            {user ? (
+              <>
+                <button className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-all">
+                  <Bell className="w-5 h-5" />
+                </button>
+                <Link 
+                  to="/settings"
+                  className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-all"
+                >
+                  <Settings className="w-5 h-5" />
+                </Link>
+                <div className="flex items-center space-x-2 px-3 py-2 bg-gray-800/50 hover:bg-gray-800 rounded-lg transition-all">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm font-medium">{user.name || 'User'}</span>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  className="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-all"
+                  title="Logout"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </>
+            ) : (
+              <div className="hidden md:block">
+                 {/* Only show on desktop, mobile has links in menu */}
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -100,8 +132,8 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-primary-600/20 to-cyan-600/20 text-primary-300 border border-primary-500/30'
-                        : 'text-gray-400 hover:text-gray-300 hover:bg-gray-800/50'
+                        ? 'bg-primary-600/10 text-primary-400 border border-primary-500/20'
+                        : 'text-gray-400 hover:bg-gray-800/50'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -109,6 +141,15 @@ const Header = () => {
                   </Link>
                 );
               })}
+              {user && (
+                 <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 transition-all w-full text-left"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span className="font-medium">Logout</span>
+                  </button>
+              )}
             </div>
           </div>
         )}
