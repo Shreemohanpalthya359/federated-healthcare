@@ -1,0 +1,42 @@
+{
+  "feature_names": [
+    "age",
+    "sex",
+    "chest_pain_type",
+    "resting_bp",
+    "cholesterol",
+    "fasting_blood_sugar",
+    "resting_ecg",
+    "max_heart_rate",
+    "exercise_induced_angina",
+    "oldpeak",
+    "slope",
+    "num_major_vessels",
+    "thalassemia"
+  ],
+  "feature_descriptions": {
+    "age": "Age in years",
+    "sex": "Sex (1 = male; 0 = female)",
+    "chest_pain_type": "Chest pain type (0-3)",
+    "resting_bp": "Resting blood pressure (mm Hg)",
+    "cholesterol": "Serum cholesterol (mg/dl)",
+    "fasting_blood_sugar": "Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)",
+    "resting_ecg": "Resting electrocardiographic results (0-2)",
+    "max_heart_rate": "Maximum heart rate achieved",
+    "exercise_induced_angina": "Exercise induced angina (1 = yes; 0 = no)",
+    "oldpeak": "ST depression induced by exercise relative to rest",
+    "slope": "Slope of the peak exercise ST segment (0-2)",
+    "num_major_vessels": "Number of major vessels colored by fluoroscopy (0-3)",
+    "thalassemia": "Thalassemia type (0-3)"
+  },
+  "scaling": {
+    "type": "minmax",
+    "ranges": {
+      "age": [29, 77],
+      "resting_bp": [94, 200],
+      "cholesterol": [126, 564],
+      "max_heart_rate": [71, 202],
+      "oldpeak": [0, 6.2]
+    }
+  }
+}

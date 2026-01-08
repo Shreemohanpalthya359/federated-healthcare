@@ -1,0 +1,26 @@
+{
+  "feature_names": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "original_shape": [
+    297,
+    15
+  ],
+  "cleaned_shape": [
+    297,
+    14
+  ],
+  "accuracy": 0.85
+}

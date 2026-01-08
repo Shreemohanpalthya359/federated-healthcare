@@ -1,0 +1,128 @@
+{
+  "centralized": {
+    "model_name": "heart_disease_centralized",
+    "description": "Centralized machine learning model trained on aggregated data",
+    "algorithm": "Random Forest",
+    "version": "1.0.0",
+    "trained_date": "2024-01-01",
+    "accuracy": 0.85,
+    "precision": 0.84,
+    "recall": 0.86,
+    "f1_score": 0.85,
+    "auc_roc": 0.92,
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 10,
+      "random_state": 42
+    },
+    "training_samples": 10000,
+    "feature_count": 13,
+    "author": "Federated HeartCare Team"
+  },
+  "federated": {
+    "model_name": "heart_disease_federated",
+    "description": "Federated learning model trained across distributed clients",
+    "algorithm": "Federated Random Forest",
+    "version": "1.0.0",
+    "trained_date": "2024-01-01",
+    "accuracy": 0.87,
+    "precision": 0.86,
+    "recall": 0.88,
+    "f1_score": 0.87,
+    "auc_roc": 0.93,
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 8,
+      "random_state": 42
+    },
+    "clients_participated": 50,
+    "training_rounds": 10,
+    "privacy_epsilon": 1.0,
+    "author": "Federated HeartCare Team"
+  },
+  "athletic": {
+    "model_name": "heart_disease_athletic",
+    "description": "Model specialized for athletic users",
+    "algorithm": "Random Forest",
+    "version": "1.0.0",
+    "trained_date": "2024-01-01",
+    "accuracy": 0.92,
+    "precision": 0.91,
+    "recall": 0.93,
+    "f1_score": 0.92,
+    "auc_roc": 0.96,
+    "hyperparameters": {
+      "n_estimators": 120,
+      "max_depth": 12,
+      "random_state": 42
+    },
+    "training_samples": 297,
+    "specialized_for": "athletic_physiology",
+    "author": "Federated HeartCare Team",
+    "heart_disease_rate": "46.1%",
+    "last_trained": "2026-01-08"
+  },
+  "diver": {
+    "model_name": "heart_disease_diver",
+    "description": "Model specialized for diver users",
+    "algorithm": "Random Forest",
+    "version": "1.0.0",
+    "trained_date": "2024-01-01",
+    "accuracy": 0.88,
+    "precision": 0.87,
+    "recall": 0.89,
+    "f1_score": 0.88,
+    "auc_roc": 0.94,
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 10,
+      "random_state": 42
+    },
+    "training_samples": 297,
+    "specialized_for": "diving_physiology",
+    "author": "Federated HeartCare Team",
+    "heart_disease_rate": "46.1%",
+    "last_trained": "2026-01-08"
+  },
+  "typical": {
+    "model_name": "heart_disease_typical",
+    "description": "Model specialized for typical users",
+    "algorithm": "Random Forest",
+    "version": "1.0.0",
+    "trained_date": "2024-01-01",
+    "accuracy": 0.85,
+    "precision": 0.84,
+    "recall": 0.86,
+    "f1_score": 0.85,
+    "auc_roc": 0.92,
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 10,
+      "random_state": 42
+    },
+    "training_samples": 297,
+    "specialized_for": "general_population",
+    "author": "Federated HeartCare Team",
+    "heart_disease_rate": "46.1%",
+    "last_trained": "2026-01-08"
+  },
+  "model_comparison": {
+    "best_overall_accuracy": "athletic",
+    "best_generalization": "federated",
+    "most_specialized": "diver",
+    "most_privacy_preserving": "federated",
+    "fastest_inference": "centralized"
+  },
+  "deployment_info": {
+    "production_models": [
+      "federated",
+      "athletic",
+      "diver",
+      "typical"
+    ],
+    "backup_model": "centralized",
+    "auto_swap_threshold": 0.7,
+    "retraining_schedule": "weekly",
+    "model_refresh_days": 30
+  }
+}

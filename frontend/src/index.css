@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100 antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 to-cyan-400 bg-clip-text text-transparent;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl 
+           text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 
+           focus:ring-primary-500 focus:border-transparent transition-all;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-primary-600 to-cyan-600 
+           text-white font-semibold rounded-xl hover:from-primary-700 
+           hover:to-cyan-700 transition-all duration-300 
+           focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:ring-offset-2 focus:ring-offset-gray-950 
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-gray-800/50 border border-gray-700 
+           text-gray-300 font-semibold rounded-xl hover:bg-gray-800 
+           hover:border-gray-600 transition-all duration-300 
+           focus:outline-none focus:ring-2 focus:ring-gray-700 
+           focus:ring-offset-2 focus:ring-offset-gray-950;
+  }
+
+  .risk-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .risk-low {
+    @apply bg-green-500/20 text-green-300 border border-green-500/30;
+  }
+
+  .risk-moderate {
+    @apply bg-yellow-500/20 text-yellow-300 border border-yellow-500/30;
+  }
+
+  .risk-high {
+    @apply bg-red-500/20 text-red-300 border border-red-500/30;
+  }
+}
+
+@layer utilities {
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s linear infinite;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

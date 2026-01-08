@@ -1,0 +1,46 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "debug": false,
+    "secret_key": "federated-heartcare-secret-key-change-in-production"
+  },
+  "models": {
+    "directory": "models/",
+    "default_model": "federated",
+    "retrain_interval": 3600,
+    "specialized_models": ["athletic", "diver", "typical", "elderly", "diabetic"]
+  },
+  "federated": {
+    "min_clients": 3,
+    "max_clients": 10,
+    "rounds_before_eval": 5,
+    "aggregation_method": "fedavg",
+    "local_iterations": 5,
+    "learning_rate": 0.01,
+    "batch_size": 32
+  },
+  "drift": {
+    "detection_window": 100,
+    "threshold": 0.05,
+    "monitor_interval": 300,
+    "user_categories": ["typical", "athletic", "diver"]
+  },
+  "privacy": {
+    "differential_privacy": true,
+    "epsilon": 1.0,
+    "delta": 1e-5,
+    "clip_norm": 1.0
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/federated_heartcare.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  },
+  "security": {
+    "cors_origins": ["http://localhost:3000", "http://localhost:8080"],
+    "rate_limit": "100 per minute",
+    "enable_https": false
+  }
+}
